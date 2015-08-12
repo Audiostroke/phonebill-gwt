@@ -6,6 +6,7 @@ import edu.pdx.cs410J.AbstractPhoneBill;
 import java.lang.Override;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class PhoneBill extends AbstractPhoneBill
@@ -27,7 +28,7 @@ public class PhoneBill extends AbstractPhoneBill
     return this.calls;
   }
 
-    public String  billToString() {
+    public String billToString() {
         List<PhoneCall> temp = (List<PhoneCall>) this.getPhoneCalls();
         String [] phonebill = new String[temp.size()];
         int counter = 0;
@@ -37,6 +38,33 @@ public class PhoneBill extends AbstractPhoneBill
         }
         StringBuilder sb = new StringBuilder();
         for (String s : phonebill) {
+            sb.append(s);
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    public String searchBillString(Date start, Date end) {
+        int counter = 0;
+        List<PhoneCall> temp = (List<PhoneCall>) this.getPhoneCalls();
+        for(PhoneCall call : temp) {
+                if(call.getStartTime().after(start) && call.getEndTime().before(end)) {
+                    ++counter;
+                }
+        }
+        if(counter == 0) {
+            return "There are no calls within these times, please try again!";
+        }
+        String [] phonebill = new String[counter];
+        int counter2 = 0;
+        for(PhoneCall call : temp) {
+            if(call.getStartTime().after(start) && call.getEndTime().before(end)) {
+                phonebill[counter2] = call.callToString();
+                ++counter2;
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for(String s : phonebill) {
             sb.append(s);
             sb.append("\n");
         }
