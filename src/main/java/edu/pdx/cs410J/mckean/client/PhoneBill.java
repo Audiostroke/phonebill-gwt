@@ -4,10 +4,7 @@ import edu.pdx.cs410J.AbstractPhoneCall;
 import edu.pdx.cs410J.AbstractPhoneBill;
 
 import java.lang.Override;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class PhoneBill extends AbstractPhoneBill
 {
@@ -30,6 +27,7 @@ public class PhoneBill extends AbstractPhoneBill
 
     public String billToString() {
         List<PhoneCall> temp = (List<PhoneCall>) this.getPhoneCalls();
+        Collections.sort(temp);
         String [] phonebill = new String[temp.size()];
         int counter = 0;
         for (PhoneCall call : temp) {
@@ -47,6 +45,7 @@ public class PhoneBill extends AbstractPhoneBill
     public String searchBillString(Date start, Date end) {
         int counter = 0;
         List<PhoneCall> temp = (List<PhoneCall>) this.getPhoneCalls();
+        Collections.sort(temp);
         for(PhoneCall call : temp) {
                 if(call.getStartTime().after(start) && call.getEndTime().before(end)) {
                     ++counter;

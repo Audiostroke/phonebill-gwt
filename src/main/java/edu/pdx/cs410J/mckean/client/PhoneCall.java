@@ -89,22 +89,17 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
      */
     @Override
     public int compareTo(PhoneCall o) {
-        if(this.startTime.before(o.startTime)) {
-            return -1;
+        int compareTime = startTime.compareTo(o.getStartTime());
+        if (compareTime != 0) {
+            return compareTime;
         }
-        else if(this.startTime.after(o.startTime)) {
-            return 1;
+
+        int compareCaller = caller.compareTo(o.getCaller());
+        if (compareCaller != 0) {
+            return compareCaller;
         }
-        else {
-            if(this.caller.compareTo(o.caller) < 0) {
-                return -1;
-            }
-            else if(this.caller.compareTo(o.caller) > 0) {
-                return 1;
-            }
-            else {
-                return 0;
-            }
-        }
+
+        return 0;
+
     }
 }

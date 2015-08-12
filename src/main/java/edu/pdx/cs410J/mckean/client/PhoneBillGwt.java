@@ -20,6 +20,7 @@ public class PhoneBillGwt implements EntryPoint {
     private VerticalPanel mainPanel = new VerticalPanel();
     private Button readMe = new Button("Help!");
     private Button button = new Button("Ping Server");
+    private Label addCallLabel = new Label("Press button after forms are filled in to add a new call");
     private Button addCall = new Button("Add a new call");
     private Button printBillButton = new Button("Print a Phone Bill");
     private Button searchButton = new Button("Search a PhoneBill");
@@ -28,14 +29,26 @@ public class PhoneBillGwt implements EntryPoint {
     private TextBox searchEndTimeBox = new TextBox();
     private TextBox printBillBox = new TextBox();
     private FlexTable callTable = new FlexTable();
+    private Label customerBoxLabel = new Label("Customer:           ");
     private TextBox customerBox = new TextBox();
+    private Label callerBoxLabel = new Label("Caller:");
     private TextBox calleeBox = new TextBox();
+    private Label calleeBoxLabel = new Label("Callee");
     private TextBox callerBox = new TextBox();
+    private Label startBoxLabel = new Label("Start Time: ");
     private TextBox startTimeBox = new TextBox();
+    private Label endBoxLabel = new Label("End Time:");
     private TextBox endTimeBox = new TextBox();
     private HorizontalPanel AddCall = new HorizontalPanel();
     private HorizontalPanel printBill = new HorizontalPanel();
     private HorizontalPanel searchBill = new HorizontalPanel();
+    private HorizontalPanel AddCallLabels = new HorizontalPanel();
+    private VerticalPanel AddCallCustomer = new VerticalPanel();
+    private VerticalPanel AddCallCaller = new VerticalPanel();
+    private VerticalPanel AddCallCallee = new VerticalPanel();
+    private VerticalPanel AddCallStart = new VerticalPanel();
+    private VerticalPanel AddCallEnd = new VerticalPanel();
+    private VerticalPanel AddCallButton = new VerticalPanel();
     private HashMap<String, PhoneBill> phoneBillHashMap = new HashMap<>();
 
     public void onModuleLoad() {
@@ -46,12 +59,30 @@ public class PhoneBillGwt implements EntryPoint {
         callTable.setText(0, 3, "Start Time | ");
         callTable.setText(0, 4, "End Time");
 
-        AddCall.add(customerBox);
-        AddCall.add(callerBox);
-        AddCall.add(calleeBox);
-        AddCall.add(startTimeBox);
-        AddCall.add(endTimeBox);
-        AddCall.add(addCall);
+        AddCallCustomer.add(customerBoxLabel);
+        AddCallCustomer.add(customerBox);
+
+        AddCallCaller.add(callerBoxLabel);
+        AddCallCaller.add(callerBox);
+
+        AddCallCallee.add(calleeBoxLabel);
+        AddCallCallee.add(calleeBox);
+
+        AddCallStart.add(startBoxLabel);
+        AddCallStart.add(startTimeBox);
+
+        AddCallEnd.add(endBoxLabel);
+        AddCallEnd.add(endTimeBox);
+
+        AddCallButton.add(addCallLabel);
+        AddCallButton.add(addCall);
+
+        AddCall.add(AddCallCustomer);
+        AddCall.add(AddCallCaller);
+        AddCall.add(AddCallCallee);
+        AddCall.add(AddCallStart);
+        AddCall.add(AddCallEnd);
+        AddCall.add(AddCallButton);
 
         printBill.add(printBillBox);
         printBill.add(printBillButton);
@@ -62,9 +93,9 @@ public class PhoneBillGwt implements EntryPoint {
         searchBill.add(searchButton);
 
         mainPanel.add(readMe);
-        mainPanel.add(button);
-        mainPanel.add(AddCall);
         mainPanel.add(callTable);
+        mainPanel.add(AddCallLabels);
+        mainPanel.add(AddCall);
         mainPanel.add(printBill);
         mainPanel.add(searchBill);
 
@@ -98,30 +129,6 @@ public class PhoneBillGwt implements EntryPoint {
                 searchBill();
             }
         });
-
-        /*
-        button.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent clickEvent) {
-                PingServiceAsync async = GWT.create(PingService.class);
-                async.ping(new AsyncCallback<AbstractPhoneBill>() {
-
-                    public void onFailure(Throwable ex) {
-                        Window.alert(ex.toString());
-                    }
-
-                    public void onSuccess(AbstractPhoneBill phonebill) {
-                        StringBuilder sb = new StringBuilder(phonebill.toString());
-                        Collection<AbstractPhoneCall> calls = phonebill.getPhoneCalls();
-                        for (AbstractPhoneCall call : calls) {
-                            sb.append(call);
-                            sb.append("\n");
-                        }
-                        Window.alert(sb.toString());
-                    }
-                });
-            }
-        });
-        */
     }
 
 
@@ -198,7 +205,6 @@ public class PhoneBillGwt implements EntryPoint {
     public void printBill() {
         String customer = printBillBox.getText();
         if(phoneBillHashMap.get(customer) != null) {
-            Collections.sort((List<Comparable>) phoneBillHashMap.get(customer).getPhoneCalls());
             Window.alert("Customer: " + customer + "\n" + phoneBillHashMap.get(customer).billToString());
         }
         else {
