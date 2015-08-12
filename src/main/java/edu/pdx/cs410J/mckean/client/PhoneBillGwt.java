@@ -18,8 +18,8 @@ import java.util.*;
  */
 public class PhoneBillGwt implements EntryPoint {
     private VerticalPanel mainPanel = new VerticalPanel();
-    private Button readMe = new Button("Help!");
-    private Button button = new Button("Ping Server");
+    private Button readMe = new Button("README");
+    private Button help = new Button("Help!");
     private Label addCallLabel = new Label("Press button after forms are filled in to add a new call");
     private Button addCall = new Button("Add a new call");
     private Button printBillButton = new Button("Print a Phone Bill");
@@ -92,6 +92,7 @@ public class PhoneBillGwt implements EntryPoint {
         searchBill.add(searchEndTimeBox);
         searchBill.add(searchButton);
 
+        mainPanel.add(help);
         mainPanel.add(readMe);
         mainPanel.add(callTable);
         mainPanel.add(AddCallLabels);
@@ -101,6 +102,13 @@ public class PhoneBillGwt implements EntryPoint {
 
         RootPanel rootPanel = RootPanel.get();
         rootPanel.add(mainPanel);
+
+        help.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                Window.alert(help());
+            }
+        });
 
         readMe.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent clickEvent) {
@@ -133,13 +141,34 @@ public class PhoneBillGwt implements EntryPoint {
 
 
     public String readMe() {
-        String readMe = "Project 5 README. This project uses Google Web Toolkit to create a web application for adding" +
-                        "and viewing phone bills and phone calls. You can add phone calls to phone bills and if a phone"
+        String readMe = "Tyler McKean - CS410J - Project 5 README. This project uses Google Web Toolkit to create a web application for adding" +
+                        " and viewing phone bills and phone calls. You can add phone calls to phone bills and if a phone"
                         +" exists for a user that doesn't have a phone bill, a new one will be created. This app can also"
                         +" search through phone bills by the time calls were made, as well as print the phone bills.";
         return readMe;
     }
 
+    public String help() {
+        String help = "The fist component of this client is a table"
+                + " that actively shows every call that has been added to various phone bills during the session. This table"
+                + " should automatically update when a new call is added, but only maintains the order in which calls were"
+                + " added.\nInformation in the table is presented left to right in this order: Customer, caller number,"
+                + " callee number, date and time the call began, date and time the call ended. A customer name can be any"
+                + " character or combination of characters (digits included), however the other pieces of data must follow a"
+                + " specific format. The caller number and the callee number must be entered in the format ###-###-#### where"
+                + " the # symbol represents a digit from 0-9, the phone numbers must also include the dashes. For any date, including"
+                + " the dates for adding a call and searching, they must be entered in the form MM/DD/YYYY H:mm am/pm. The H represents"
+                + " the hours in 12-hour time, so 1 and 12 work. AM and PM can be entered in either uppercase"
+                + " or lowercase.\nNext there are five boxes following the same order with fields to "
+                + " enter information and add a new call. Once all fields are filled in, simply press the add a call button to add it.\n"
+                + "The next component of the app below the add call bar is the tool to search for a phone bill and print it out by"
+                + " individual calls in a readable format. Simply enter in the customer name in the field and press the print button."
+                + "\nFinally, the last feature on the bottom is to search through a specific phone bill and print calls falling between"
+                + " a specific time. Simply enter the customer name, then the start date and time, and the end date and time and press"
+                + " the button to print out all the calls for that phonebill falling between the specified times. If none exist, the client"
+                + " will let you know.";
+        return help;
+    }
     public void addNewCall() {
         String customer = customerBox.getText();
         String caller = callerBox.getText();
