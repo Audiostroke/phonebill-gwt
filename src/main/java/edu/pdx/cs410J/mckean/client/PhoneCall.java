@@ -6,8 +6,14 @@ import edu.pdx.cs410J.AbstractPhoneCall;
 import java.lang.Override;
 import java.util.Date;
 
+/**
+ * The phone call class used by Phone Bill, describes the objects most often manipulated and added.
+ */
 public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall>
 {
+    /**
+     * Variabled describing a phone call ( a number for caller, callee, and dates for the start and end times)/
+     */
     protected String caller;
     protected String callee;
     protected Date startTime;

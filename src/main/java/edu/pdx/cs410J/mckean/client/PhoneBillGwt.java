@@ -17,10 +17,15 @@ import java.util.*;
  * A basic GWT class that makes sure that we can send an Phone Bill back from the server
  */
 public class PhoneBillGwt implements EntryPoint {
+    /**
+     * Variables that make up the widgets on the GUI for the client, contains a series of
+     * buttons, panels, textboxes, and a flextable.
+     */
     private VerticalPanel mainPanel = new VerticalPanel();
     private Button readMe = new Button("README");
     private Button help = new Button("Help!");
     private Label addCallLabel = new Label("Press button after forms are filled in to add a new call");
+    private Label searchButtonLabel = new Label("Press button after forms are filled in to search for a phone bill");
     private Button addCall = new Button("Add a new call");
     private Button printBillButton = new Button("Print a Phone Bill");
     private Button searchButton = new Button("Search a PhoneBill");
@@ -39,17 +44,28 @@ public class PhoneBillGwt implements EntryPoint {
     private TextBox startTimeBox = new TextBox();
     private Label endBoxLabel = new Label("End Time:");
     private TextBox endTimeBox = new TextBox();
+    private Label searchStartTimeLabel = new Label("Start Time: ");
+    private Label searchEndTimeLabel = new Label("End Time: ");
+    private Label searchCustomerLabel = new Label("End Time: ");
+    private Label printCustomerLabel = new Label("Customer: ");
+    private Label printButtonLabel = new Label("Press the button after entering in a customer to print their phone bill");
     private HorizontalPanel AddCall = new HorizontalPanel();
     private HorizontalPanel printBill = new HorizontalPanel();
     private HorizontalPanel searchBill = new HorizontalPanel();
-    private HorizontalPanel AddCallLabels = new HorizontalPanel();
     private VerticalPanel AddCallCustomer = new VerticalPanel();
     private VerticalPanel AddCallCaller = new VerticalPanel();
     private VerticalPanel AddCallCallee = new VerticalPanel();
     private VerticalPanel AddCallStart = new VerticalPanel();
     private VerticalPanel AddCallEnd = new VerticalPanel();
     private VerticalPanel AddCallButton = new VerticalPanel();
+    private VerticalPanel PrintCustomer = new VerticalPanel();
+    private VerticalPanel PrintButton = new VerticalPanel();
+    private VerticalPanel SearchCustomer = new VerticalPanel();
+    private VerticalPanel SearchStart = new VerticalPanel();
+    private VerticalPanel SearchEnd = new VerticalPanel();
+    private VerticalPanel SearchButtonVert = new VerticalPanel();
     private HashMap<String, PhoneBill> phoneBillHashMap = new HashMap<>();
+    static PingServiceAsync pinger;
 
     public void onModuleLoad() {
 
@@ -84,18 +100,35 @@ public class PhoneBillGwt implements EntryPoint {
         AddCall.add(AddCallEnd);
         AddCall.add(AddCallButton);
 
-        printBill.add(printBillBox);
-        printBill.add(printBillButton);
+        PrintCustomer.add(printCustomerLabel);
+        PrintCustomer.add(printBillBox);
 
-        searchBill.add(searchCustomerBox);
-        searchBill.add(searchStartTimeBox);
-        searchBill.add(searchEndTimeBox);
-        searchBill.add(searchButton);
+        PrintButton.add(printButtonLabel);
+        PrintButton.add(printBillButton);
+
+        printBill.add(PrintCustomer);
+        printBill.add(PrintButton);
+
+        SearchCustomer.add(searchCustomerLabel);
+        SearchCustomer.add(searchCustomerBox);
+
+        SearchStart.add(searchStartTimeLabel);
+        SearchStart.add(searchStartTimeBox);
+
+        SearchEnd.add(searchEndTimeLabel);
+        SearchEnd.add(searchEndTimeBox);
+
+        SearchButtonVert.add(searchButtonLabel);
+        SearchButtonVert.add(searchButton);
+
+        searchBill.add(SearchCustomer);
+        searchBill.add(SearchStart);
+        searchBill.add(SearchEnd);
+        searchBill.add(SearchButtonVert);
 
         mainPanel.add(help);
         mainPanel.add(readMe);
         mainPanel.add(callTable);
-        mainPanel.add(AddCallLabels);
         mainPanel.add(AddCall);
         mainPanel.add(printBill);
         mainPanel.add(searchBill);
@@ -139,7 +172,10 @@ public class PhoneBillGwt implements EntryPoint {
         });
     }
 
-
+    /**
+     * Function that contains the readME document.
+     * @return Returns a string to the client to print the readME.
+     */
     public String readMe() {
         String readMe = "Tyler McKean - CS410J - Project 5 README. This project uses Google Web Toolkit to create a web application for adding" +
                         " and viewing phone bills and phone calls. You can add phone calls to phone bills and if a phone"
@@ -148,6 +184,10 @@ public class PhoneBillGwt implements EntryPoint {
         return readMe;
     }
 
+    /**
+     * Function that contains the Help document.
+     * @return Returns a string to the client to print the Help document.
+     */
     public String help() {
         String help = "The fist component of this client is a table"
                 + " that actively shows every call that has been added to various phone bills during the session. This table"
@@ -169,6 +209,11 @@ public class PhoneBillGwt implements EntryPoint {
                 + " will let you know.";
         return help;
     }
+
+    /**
+     * Function that adds a new call to a phone bill. If a phonebill exists for the given customer it will add it to it,
+     * if not a new phonebill will be created. This also error checks the user input from the GUI.
+     */
     public void addNewCall() {
         String customer = customerBox.getText();
         String caller = callerBox.getText();
@@ -208,6 +253,21 @@ public class PhoneBillGwt implements EntryPoint {
         newCall.startTime = DateTimeFormat.getFormat("MM/dd/yyyy h:mm a").parse(startTime);
         newCall.endTime = DateTimeFormat.getFormat("MM/dd/yyyy h:mm a").parse(endTime);
 
+        /*
+        pinger.ping(customer, newCall, new AsyncCallback<AbstractPhoneBill>() {
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        Window.alert("Call not added!");
+                    }
+
+                    @Override
+                    public void onSuccess(AbstractPhoneBill abstractPhoneBill) {
+                        Window.alert("Call added!");
+                    }
+                });
+        */
+
         PhoneBill newBill = phoneBillHashMap.get(customer);
         if(newBill != null) {
             newBill.addPhoneCall(newCall);
@@ -231,6 +291,10 @@ public class PhoneBillGwt implements EntryPoint {
         endTimeBox.setText("");
     }
 
+    /**
+     * Function to print a phone bill. Simply searches through the map of phone bills based on what the customer
+     * entered and returns the phone bill in a nicely printed format and also sorted.
+     */
     public void printBill() {
         String customer = printBillBox.getText();
         if(phoneBillHashMap.get(customer) != null) {
@@ -243,6 +307,10 @@ public class PhoneBillGwt implements EntryPoint {
         printBillBox.setText("");
     }
 
+    /**
+     * Function that prints a list of calls within the parameters set by the user. Checks the phone bill for any calls
+     * that fall between the start and end time of the parameters and prints them out.
+     */
     public void searchBill() {
         String customer = searchCustomerBox.getText();
         String startTime = searchStartTimeBox.getText();
